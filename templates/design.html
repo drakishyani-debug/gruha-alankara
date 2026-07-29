@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Design Studio - Gruha Alankara{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>Design Studio</h1>
+    <p>Create your perfect interior with AI assistance</p>
+</section>
+
+<div class="studio-layout">
+    <aside class="studio-sidebar">
+        <div class="panel">
+            <h3>⚙ Design Preferences</h3>
+            <div class="form-row">
+                <label for="style-theme">Style Theme</label>
+                <select id="style-theme">
+                    {% for style in styles %}
+                    <option value="{{ style }}">{{ style }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="budget-input">Budget (₹)</label>
+                <input type="number" id="budget-input" value="400000" min="40000" step="5000">
+                <input type="range" id="budget-slider" min="40000" max="4000000" step="5000" value="400000">
+            </div>
+            <div class="form-row">
+                <label for="room-type-select">Room Type</label>
+                <select id="room-type-select">
+                    <option value="living room">Living Room</option>
+                    <option value="bedroom">Bedroom</option>
+                    <option value="kitchen">Kitchen</option>
+                    <option value="dining room">Dining Room</option>
+                    <option value="home office">Home Office</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary btn-block" id="generate-btn">✎ Generate Design</button>
+        </div>
+
+        <div class="panel">
+            <h3>ⓘ Quick Tips</h3>
+            <ul class="tips-list">
+                <li>✓ Upload your room photo first for best results</li>
+                <li>✓ Adjust budget to see different options</li>
+                <li>✓ Save your favorite designs to catalog</li>
+                <li>✓ Try different styles to compare</li>
+                <li>✓ View designs in AR on your mobile device</li>
+            </ul>
+        </div>
+
+        <div class="panel">
+            <h3>⬤ AI Status</h3>
+            <p id="ai-status" class="status-idle">● Waiting for input</p>
+        </div>
+    </aside>
+
+    <div class="studio-main">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="overview">Ⓘ Overview</button>
+            <button class="tab-btn" data-tab="furniture">▤ Furniture</button>
+            <button class="tab-btn" data-tab="budget">₹ Budget</button>
+            <button class="tab-btn" data-tab="viewer3d">▢ 3D View</button>
+        </div>
+
+        <div id="tab-overview" class="tab-panel active">
+            <div class="overview-grid">
+                <div class="panel">
+                    <h4>✏ Style Suggestions</h4>
+                    <p id="ov-style-title" class="style-title"></p>
+                    <p id="ov-style-desc" class="muted"></p>
+                    <p><strong>Recommended Furniture:</strong></p>
+                    <ul id="ov-furniture-hints"></ul>
+                </div>
+                <div class="panel">
+                    <h4>🎨 Color Palette</h4>
+                    <div id="ov-palette" class="palette-swatches"></div>
+                </div>
+                <div class="panel">
+                    <h4>🧱 Materials & Textures</h4>
+                    <ul id="ov-materials"></ul>
+                </div>
+            </div>
+            <div class="panel">
+                <h4>AI Design Story</h4>
+                <p id="ov-story" class="muted"></p>
+            </div>
+            <div id="room-preview-wrap" class="panel hidden">
+                <img id="room-preview-img" class="room-preview-img" alt="Room preview">
+                <p id="room-preview-caption" class="muted center"></p>
+            </div>
+        </div>
+
+        <div id="tab-furniture" class="tab-panel">
+            <div class="panel">
+                <div id="furniture-grid" class="furniture-grid"></div>
+            </div>
+            <div class="panel">
+                <h4>💡 Layout Tips</h4>
+                <ul id="layout-tips-list"></ul>
+            </div>
+            <div class="panel">
+                <h4>📏 Space Utilization</h4>
+                <div class="space-bar-track"><div id="space-bar-fill" class="space-bar-fill"></div></div>
+                <p><span id="space-util-pct"></span>% - <span id="space-util-rating"></span></p>
+                <p class="muted"><span id="space-total-sqft"></span> sq ft furniture / <span id="space-room-sqft"></span> sq ft total</p>
+            </div>
+        </div>
+
+        <div id="tab-budget" class="tab-panel">
+            <div class="panel" id="budget-breakdown"></div>
+            <div class="panel">
+                <h4>Savings Tips</h4>
+                <ul id="savings-tips-list"></ul>
+            </div>
+        </div>
+
+        <div id="tab-viewer3d" class="tab-panel">
+            <div class="panel">
+                <div class="viewer3d-grid">
+                    <a href="{{ url_for('live_ar_camera') }}" class="viewer3d-card">
+                        <div class="viewer3d-badge">Recommended</div>
+                        <div class="viewer3d-icon">🎥</div>
+                        <h4>Live AR Camera</h4>
+                        <p>Place furniture in real-time using your device camera</p>
+                    </a>
+                    <div class="viewer3d-card" id="open-3d-viewer">
+                        <div class="viewer3d-badge alt">Popular</div>
+                        <div class="viewer3d-icon">🧊</div>
+                        <h4>3D Model Viewer</h4>
+                        <p>View furniture in 3D and place in AR</p>
+                    </div>
+                    <div class="viewer3d-card">
+                        <div class="viewer3d-icon">🔄</div>
+                        <h4>360° Preview</h4>
+                        <p>Interactive room panorama view</p>
+                    </div>
+                </div>
+                <div id="three-viewer" class="three-viewer hidden"></div>
+            </div>
+        </div>
+
+        <div class="studio-actions">
+            <button class="btn btn-success" id="save-catalog-btn">💾 Save to Catalog</button>
+            <a href="{{ url_for('live_ar_camera') }}" class="btn btn-primary">🎥 Live AR Camera</a>
+            <button class="btn btn-secondary" id="viewer-3d-btn">▢ 3D Viewer</button>
+            <button class="btn btn-secondary" id="export-pdf-btn">⬇ Export PDF</button>
+            <button class="btn btn-secondary" id="share-btn">↗ Share</button>
+        </div>
+    </div>
+</div>
+
+<!-- Buddy voice assistant widget -->
+<div id="buddy-widget" class="buddy-widget">
+    <button id="buddy-toggle" class="buddy-toggle" title="Talk to buddy">🎙️ buddy</button>
+    <div id="buddy-panel" class="buddy-panel hidden">
+        <div class="buddy-header">
+            <strong>buddy</strong> - your booking assistant
+            <select id="buddy-language">
+                <option value="en">English</option>
+                <option value="hi">हिंदी (Hindi)</option>
+                <option value="te">తెలుగు (Telugu)</option>
+            </select>
+        </div>
+        <div id="buddy-log" class="buddy-log"></div>
+        <div class="buddy-controls">
+            <input type="text" id="buddy-text-input" placeholder="Type 'book the sofa'...">
+            <button id="buddy-mic-btn" title="Speak">🎤</button>
+            <button id="buddy-send-btn">Send</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/voice.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="{{ url_for('static', filename='js/ar_viewer.js') }}"></script>
+<script>initDesignPage();</script>
+{% endblock %}

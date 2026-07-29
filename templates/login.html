@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Login - Gruha Alankara{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card">
+        <h2>Welcome Back</h2>
+        <p class="auth-subtitle">Log in to continue designing your space</p>
+        <form method="POST" action="{{ url_for('login') }}" class="form">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email">
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password">
+
+            <button type="submit" class="btn btn-primary btn-block">Log In</button>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="{{ url_for('register') }}">Sign up</a></p>
+    </div>
+</section>
+{% endblock %}

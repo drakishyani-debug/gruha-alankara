@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Gruha Alankara - Transform Your Space with AI{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Transform Your Space with <span class="gradient-text">AI</span></h1>
+    <p class="subtitle">Personalized interior designs powered by intelligent agents</p>
+    <div class="hero-actions">
+        {% if current_user %}
+            <a href="{{ url_for('analyze_page') }}" class="btn btn-primary">Start Designing</a>
+        {% else %}
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Start Designing</a>
+        {% endif %}
+        <a href="#tools" class="btn btn-secondary">Learn More</a>
+    </div>
+</section>
+
+<section id="tools" class="section">
+    <h2 class="section-title">Intelligent Design Tools</h2>
+    <div class="tool-grid">
+        <a href="{{ url_for('analyze_page') if current_user else url_for('login') }}" class="tool-card">
+            <div class="tool-icon">📷</div>
+            <h3>Room Analyzer</h3>
+            <p>Upload a photo and our AI extracts dimensions, lighting, and structural features automatically.</p>
+            <span class="tool-link">Try Now →</span>
+        </a>
+        <a href="{{ url_for('design_studio') if current_user else url_for('login') }}" class="tool-card">
+            <div class="tool-icon">🎨</div>
+            <h3>Style Suggester</h3>
+            <p>Get personalized style recommendations based on your preferences and current design trends.</p>
+            <span class="tool-link">Explore Styles →</span>
+        </a>
+        <a href="{{ url_for('design_studio') if current_user else url_for('login') }}" class="tool-card">
+            <div class="tool-icon">📦</div>
+            <h3>3D Visualization</h3>
+            <p>Preview your room in realistic 3D and AR before making any changes or purchases.</p>
+            <span class="tool-link">View Demo →</span>
+        </a>
+        <a href="{{ url_for('design_studio') if current_user else url_for('login') }}" class="tool-card">
+            <div class="tool-icon">🛋️</div>
+            <h3>Furniture Optimizer</h3>
+            <p>Optimal furniture placement suggestions for maximum space efficiency and aesthetics.</p>
+            <span class="tool-link">Optimize →</span>
+        </a>
+        <a href="{{ url_for('design_studio') if current_user else url_for('login') }}" class="tool-card">
+            <div class="tool-icon">₹</div>
+            <h3>Budget Planner</h3>
+            <p>Smart budget allocation across furniture, decor, and materials with savings tips.</p>
+            <span class="tool-link">Plan Budget →</span>
+        </a>
+        <a href="{{ url_for('live_ar_camera') if current_user else url_for('login') }}" class="tool-card">
+            <div class="tool-icon">🎥</div>
+            <h3>Live AR Camera</h3>
+            <p>Place furniture in real-time using your device camera with instant AR visualization.</p>
+            <span class="tool-link">Try AR →</span>
+        </a>
+    </div>
+</section>
+
+<section class="section">
+    <h2 class="section-title">Popular Design Styles</h2>
+    <p class="section-subtitle">Choose your favorite style and let AI create your perfect space</p>
+    <div class="style-grid">
+        {% for style in styles %}
+        <div class="style-card">
+            <div class="style-thumb"></div>
+            <h4>{{ style }}</h4>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Design Viewer - Gruha Alankara{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>{{ design.room_type|title }} · {{ design.style }}</h1>
+    <p>Saved on {{ design.created_at }} · Budget ₹{{ "%.2f"|format(design.budget) }}</p>
+</section>
+
+<div class="panel">
+    <div id="viewer-3d-container" class="three-viewer"
+         data-room-type="{{ design.room_type }}"
+         data-style="{{ design.style }}"></div>
+</div>
+
+<div class="panel">
+    <h3>Furniture in this Design</h3>
+    <div class="furniture-grid">
+        {% for f in furniture %}
+        <div class="furniture-item">
+            <div class="furniture-icon">🪑</div>
+            <h5>{{ f.name }}</h5>
+            <p class="muted">Qty: {{ f.quantity }}</p>
+            <span class="badge badge-{{ f.priority }}">{{ f.priority }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<a href="{{ url_for('catalog') }}" class="btn btn-secondary">← Back to Catalog</a>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="{{ url_for('static', filename='js/ar_viewer.js') }}"></script>
+<script>renderStaticRoomViewer('viewer-3d-container');</script>
+{% endblock %}

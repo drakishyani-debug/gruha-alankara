@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Live AR Camera - Gruha Alankara{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>Live AR Camera</h1>
+    <p>Point your camera at your room and tap a furniture piece to preview it in place</p>
+</section>
+
+<div class="panel ar-camera-panel">
+    <div class="ar-stage">
+        <video id="ar-video" autoplay playsinline></video>
+        <canvas id="ar-overlay"></canvas>
+    </div>
+    <div class="ar-controls">
+        <button type="button" class="btn btn-primary" id="ar-start-btn">Start Camera</button>
+        <button type="button" class="btn btn-secondary" id="ar-stop-btn" disabled>Stop Camera</button>
+    </div>
+    <div class="ar-furniture-picker">
+        <p>Tap to place:</p>
+        <div class="ar-furniture-options">
+            <button class="ar-piece-btn" data-piece="sofa" data-color="#7c6fe0">🛋️ Sofa</button>
+            <button class="ar-piece-btn" data-piece="table" data-color="#e0a56f">🟫 Table</button>
+            <button class="ar-piece-btn" data-piece="chair" data-color="#6fe0a5">🪑 Chair</button>
+            <button class="ar-piece-btn" data-piece="lamp" data-color="#e0e06f">💡 Lamp</button>
+        </div>
+        <p class="muted small">Tap anywhere on the camera view to place the selected item. This is a lightweight, in-browser AR preview (colored silhouettes) so it works entirely offline with no external AR SDK.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/ar_viewer.js') }}"></script>
+<script>initLiveARCamera();</script>
+{% endblock %}

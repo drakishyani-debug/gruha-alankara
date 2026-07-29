@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gruha Alankara{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="nav-brand">🏠 Gruha Alankara</a>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint=='index' }}">Home</a>
+            {% if current_user %}
+                <a href="{{ url_for('analyze_page') }}" class="{{ 'active' if request.endpoint=='analyze_page' }}">Analyze Room</a>
+                <a href="{{ url_for('design_studio') }}" class="{{ 'active' if request.endpoint=='design_studio' }}">Design Studio</a>
+                <a href="{{ url_for('catalog') }}" class="{{ 'active' if request.endpoint=='catalog' }}">My Catalog</a>
+                <a href="{{ url_for('logout') }}">Logout ({{ current_user['username'] }})</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}" class="nav-cta">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gruha Alankara · AI interior styling. Powered by Agentic AI.</p>
+    </footer>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

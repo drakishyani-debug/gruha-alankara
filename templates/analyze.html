@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Analyze Room - Gruha Alankara{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>Room Analysis</h1>
+    <p>Upload a photo of your room to begin AI-powered analysis</p>
+</section>
+
+<section class="panel">
+    <div id="upload-zone" class="upload-zone">
+        <input type="file" id="image-input" accept="image/*" hidden>
+        <div id="upload-placeholder" class="upload-placeholder">
+            <p>📷 Click to select a photo, or use your camera</p>
+            <div class="upload-actions">
+                <button type="button" class="btn btn-secondary" id="choose-file-btn">Choose Photo</button>
+                <button type="button" class="btn btn-secondary" id="use-camera-btn">Use Camera</button>
+            </div>
+        </div>
+        <div id="preview-wrap" class="preview-wrap hidden">
+            <img id="preview-img" alt="Room preview">
+            <button type="button" class="btn btn-secondary" id="change-image-btn">↻ Change Image</button>
+        </div>
+        <video id="camera-feed" class="camera-feed hidden" autoplay playsinline></video>
+        <canvas id="capture-canvas" class="hidden"></canvas>
+        <div id="camera-controls" class="camera-controls hidden">
+            <button type="button" class="btn btn-primary" id="capture-btn">Capture Photo</button>
+            <button type="button" class="btn btn-secondary" id="cancel-camera-btn">Cancel</button>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="room-type">Room Type</label>
+        <select id="room-type">
+            <option value="living room">Living Room</option>
+            <option value="bedroom">Bedroom</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="dining room">Dining Room</option>
+            <option value="home office">Home Office</option>
+        </select>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="analyze-btn" disabled>Analyze Room</button>
+</section>
+
+<section id="results-section" class="panel hidden">
+    <h2>Analysis Results</h2>
+    <div class="results-grid">
+        <div class="result-card">
+            <div class="result-icon">📐</div>
+            <h4>Dimensions</h4>
+            <p><strong>Width:</strong> <span id="res-width"></span> feet</p>
+            <p><strong>Length:</strong> <span id="res-length"></span> feet</p>
+            <p><strong>Height:</strong> <span id="res-height"></span> feet</p>
+            <p><strong>Area:</strong> <span id="res-area"></span> sq feet</p>
+        </div>
+        <div class="result-card">
+            <div class="result-icon">💡</div>
+            <h4>Lighting Analysis</h4>
+            <p><strong>Quality:</strong> <span id="res-light-quality"></span></p>
+            <p><strong>Brightness:</strong> <span id="res-brightness"></span></p>
+            <p id="res-light-note" class="muted"></p>
+        </div>
+        <div class="result-card">
+            <div class="result-icon">🎨</div>
+            <h4>Color Palette</h4>
+            <div id="res-palette" class="palette-swatches"></div>
+        </div>
+        <div class="result-card">
+            <div class="result-icon">🧩</div>
+            <h4>Room Features</h4>
+            <p><strong>Complexity:</strong> <span id="res-complexity"></span></p>
+            <p><strong>Detected Edges:</strong> <span id="res-edges"></span></p>
+            <p><strong>Orientation:</strong> <span id="res-orientation"></span></p>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary" id="proceed-btn">→ Proceed to Design</button>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>initAnalyzePage();</script>
+{% endblock %}

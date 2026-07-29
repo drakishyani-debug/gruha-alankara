@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}My Catalog - Gruha Alankara{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>My Design Catalog</h1>
+    <p>Browse and manage your saved interior designs</p>
+</section>
+
+<section class="panel filter-bar">
+    <form method="GET" action="{{ url_for('catalog') }}" class="filter-form">
+        <div class="form-row inline">
+            <label for="style">Filter by Style:</label>
+            <select name="style" id="style" onchange="this.form.submit()">
+                <option value="all" {{ 'selected' if request.args.get('style', 'all') == 'all' }}>All Styles</option>
+                {% for s in ["Modern Minimalist", "Scandinavian", "Traditional", "Industrial", "Bohemian", "Coastal"] %}
+                <option value="{{ s }}" {{ 'selected' if request.args.get('style') == s }}>{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-row inline">
+            <label for="room_type">Filter by Room:</label>
+            <select name="room_type" id="room_type" onchange="this.form.submit()">
+                <option value="all" {{ 'selected' if request.args.get('room_type', 'all') == 'all' }}>All Rooms</option>
+                {% for r in ["living room", "bedroom", "kitchen", "dining room", "home office"] %}
+                <option value="{{ r }}" {{ 'selected' if request.args.get('room_type') == r }}>{{ r|title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-row inline">
+            <label for="sort">Sort by:</label>
+            <select name="sort" id="sort" onchange="this.form.submit()">
+                <option value="newest" {{ 'selected' if request.args.get('sort', 'newest') == 'newest' }}>Newest First</option>
+                <option value="oldest" {{ 'selected' if request.args.get('sort') == 'oldest' }}>Oldest First</option>
+            </select>
+        </div>
+    </form>
+</section>
+
+{% if designs %}
+<div class="catalog-grid">
+    {% for d in designs %}
+    <div class="catalog-card">
+        <h4>{{ d.room_type|title if d.room_type else "Untitled" }}</h4>
+        <p>📍 {{ d.room_type|title }}</p>
+        <p>🎨 {{ d.style }}</p>
+        <p>₹ {{ "%.2f"|format(d.budget) if d.budget else "0.00" }}</p>
+        <p class="muted small">🕒 Created: {{ d.created_at }}</p>
+        <div class="catalog-card-actions">
+            <a href="{{ url_for('ar_viewer', design_id=d.id) }}" class="btn btn-secondary btn-sm">👁 View</a>
+            <form method="POST" action="{{ url_for('duplicate_design', design_id=d.id) }}" class="inline-form">
+                <button type="submit" class="btn btn-secondary btn-sm">⧉ Duplicate</button>
+            </form>
+            <form method="POST" action="{{ url_for('delete_design', design_id=d.id) }}" class="inline-form"
+                  onsubmit="return confirm('Delete this design?');">
+                <button type="submit" class="btn btn-danger btn-sm">🗑</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="panel empty-state">
+    <p>No designs saved yet. Head to the <a href="{{ url_for('design_studio') }}">Design Studio</a> to create your first one!</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Sign Up - Gruha Alankara{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card">
+        <h2>Create Your Account</h2>
+        <p class="auth-subtitle">Start transforming your space with AI</p>
+        <form method="POST" action="{{ url_for('register') }}" class="form">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required minlength="3" maxlength="30">
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email">
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required minlength="6" autocomplete="new-password">
+
+            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+    </div>
+</section>
+{% endblock %}
